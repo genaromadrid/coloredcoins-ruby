@@ -19,14 +19,15 @@ describe Coloredcoins::MultisigTx do
     Bitcoin.network = :bitcoin
   end
 
-  describe '#sign' do
-    subject do
-      Coloredcoins::MultisigTx.build(tx_hex) do |tx|
-        tx.key = wif
-        tx.m = 2
-        tx.pub_keys = pub_keys
-      end
+  subject do
+    Coloredcoins::MultisigTx.build(tx_hex) do |tx|
+      tx.key = wif
+      tx.m = 2
+      tx.pub_keys = pub_keys
     end
+  end
+
+  describe '#sign' do
     let(:tx) { subject.tx }
 
     describe 'before sign' do
