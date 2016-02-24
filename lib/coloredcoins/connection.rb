@@ -24,7 +24,7 @@ module Coloredcoins
       )
       JSON.parse(response, symbolize_names: true)
     rescue RestClient::ExceptionWithResponse => e
-      JSON.parse(e.response, symbolize_names: true)
+      raise Coloredcoins::ConnectionError, e.response
     end
 
   private

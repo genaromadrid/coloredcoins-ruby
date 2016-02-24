@@ -2,8 +2,6 @@ module Coloredcoins
   class MultisigTx < Transaction
     attr_accessor :m, :pub_keys, :key
 
-    InvalidSignatureError = Class.new SecurityError
-
     def self.build(tx_hex)
       transaction = MultisigTx.new(tx_hex)
       yield transaction
@@ -17,7 +15,7 @@ module Coloredcoins
         sig = key.sign(redeem_script)
         public_script = Bitcoin::Script.to_signature_pubkey_script(sig, [key.pub].pack("H*"))
         tx.inputs[i].script_sig = public_script
-        raise InvalidSignatureError, 'Invalid signature' unless tx.verify_input_signature(i, public_script)
+        raise Coloredcoins::InvalidSignatureError, 'Invalid signature' unless tx.verify_input_signature(i, public_script)
       end
       true
     end
@@ -28,6 +26,8 @@ module Coloredcoins
         else
           Bitcoin::Key.from_base58(key)
         end
+    rescue RuntimeError => e
+      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
     end
 
     def redeem_script

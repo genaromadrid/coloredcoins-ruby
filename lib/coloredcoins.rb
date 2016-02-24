@@ -8,6 +8,10 @@ module Coloredcoins
 
   attr_writer :api
 
+  InvalidSignatureError = Class.new SecurityError
+  ConnectionError = Class.new StandardError
+  InvalidKeyError = Class.new RuntimeError
+
   API_VERSION = 'v3'
   NETS = [
     MAINNET = 'mainnet',
