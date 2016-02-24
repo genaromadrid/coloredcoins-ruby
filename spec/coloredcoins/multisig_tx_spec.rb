@@ -1,6 +1,6 @@
 require 'bitcoin'
 
-describe Coloredcoins::API do
+describe Coloredcoins::MultisigTx do
 
   let!(:tx_hex)    { '0100000001719317d1d89cbbe89f0783053b5a6ba16ab584ac6f9a60ed25cafe94c6f9f3680000000000ffffffff020000000000000000096a074343010527b010ce8101000000000017a9141442dada3e43b037543440bad2ad9695a360a6558700000000' }
   let!(:priv_keys) {[
@@ -19,19 +19,33 @@ describe Coloredcoins::API do
     Bitcoin.network = :bitcoin
   end
 
-  describe '#sign_tx' do
-    it 'should be signed' do
-      transaction = Coloredcoins::MultisigTx.build(tx_hex) do |tx|
+  describe '#sign' do
+    subject do
+      Coloredcoins::MultisigTx.build(tx_hex) do |tx|
         tx.key = wif
         tx.m = 2
         tx.pub_keys = pub_keys
       end
-      tx = transaction.tx
-      expect(tx.inputs.first.script_sig).to be_empty
-      transaction.sign
-      tx.inputs.each do |input|
-        expect(input.script_sig).not_to be_empty
+    end
+    let(:tx) { subject.tx }
+
+    describe 'before sign' do
+      it 'inputs should not be signed' do
+        tx.inputs.each do |input|
+          expect(input.script_sig).to be_empty
+        end
       end
     end
+
+    describe 'after sign' do
+      before { subject.sign }
+
+      it 'inputs should be signed' do
+        tx.inputs.each do |input|
+          expect(input.script_sig).not_to be_empty
+        end
+      end
+    end
+
   end
 end
