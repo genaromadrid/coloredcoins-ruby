@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Coloredcoins::VERSION
   spec.authors       = ['Genaro Madrid']
   spec.email         = ['genmadrid@gmail.com']
-  spec.summary       = %q{Ruby wrapper for coloredcoins.org}
+  spec.summary       = 'Ruby wrapper for coloredcoins.org'
   spec.homepage      = 'https://github.com/genaromadrid/coloredcoins-ruby'
   spec.license       = 'MIT'
 
@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '3.1'
   spec.add_development_dependency 'pry-byebug', '~> 3.0'
   spec.add_development_dependency 'bump', '~> 0.5', '>= 0.5.3'
+  spec.add_development_dependency 'rubocop',     '~> 0.36'
 end
