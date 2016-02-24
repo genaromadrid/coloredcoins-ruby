@@ -30,5 +30,9 @@ module Coloredcoins
     def send_asset(asset)
       @connection.post('/sendasset', asset)
     end
+
+    def broadcast(tx_hex)
+      @connection.post('/broadcast', txHex: tx_hex)
+    end
   end
 end

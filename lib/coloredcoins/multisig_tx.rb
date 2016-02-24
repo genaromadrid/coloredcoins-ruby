@@ -38,6 +38,10 @@ module Coloredcoins
       @address ||= Bitcoin.hash160_to_p2sh_address(Bitcoin.hash160(redeem_script.hth))
     end
 
+    def broadcast
+      Coloredcoins.broadcast(to_hex)
+    end
+
     private
 
       def check
