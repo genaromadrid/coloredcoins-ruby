@@ -1,4 +1,3 @@
-require 'bitcoin'
 module Coloredcoins
   class API
     attr_reader :network,
@@ -31,28 +30,5 @@ module Coloredcoins
     def send_asset(asset)
       @connection.post('/sendasset', asset)
     end
-
-    def sign_tx(unsigned_tx, redeem_script, wif)
-      Bitcoin.network = :bitcoin
-      key = Bitcoin::Key.from_base58(wif)
-      tx = build_tx(unsigned_tx)
-      tx.inputs.each_with_index do |input, i|
-        # signature_hash = tx.signature_hash_for_input(i, tx)
-        signature = key.sign(redeem_script)
-        tx.inputs[i].script_sig = signature
-      end
-      tx
-    end
-
-    def get_redeem_script(m, *pub_keys)
-      address, redeem_script = Bitcoin.pubkeys_to_p2sh_multisig_address(m, *pub_keys)
-      redeem_script
-    end
-
-    private
-
-      def build_tx(hex)
-        Bitcoin::P::Tx.new([hex].pack('H*'))
-      end
   end
 end
