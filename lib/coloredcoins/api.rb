@@ -3,7 +3,7 @@ module Coloredcoins
     attr_reader :network,
                 :api_version
 
-    def initialize(network:'mainnet', api_version:'v3')
+    def initialize(network:Coloredcoins.network, api_version:'v3')
       @network = network
       @api_version = api_version
       @connection = Connection.new(url)
@@ -15,7 +15,7 @@ module Coloredcoins
     end
 
     def testnet?
-      network == 'testnet'
+      network == Coloredcoins::TESTNET
     end
 
     def network=(network)

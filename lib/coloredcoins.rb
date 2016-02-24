@@ -9,10 +9,22 @@ module Coloredcoins
   attr_writer :api
 
   API_VERSION = 'v3'
-  BLOCK_CHAIN = 'mainnet'
+  NETS = [
+    MAINNET = 'mainnet',
+    TESTNET = 'testnet'
+  ]
 
   def self.api
-    @api ||= API.new(network:BLOCK_CHAIN, api_version:API_VERSION)
+    @api ||= API.new(network:network, api_version:API_VERSION)
+  end
+
+  def self.network
+    @network || MAINNET
+  end
+
+  def self.network=(network)
+    @network = network
+    @api = API.new(network:network, api_version:API_VERSION)
   end
 
   def self.method_missing(sym, *args, &block)
