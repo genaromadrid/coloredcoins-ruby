@@ -10,12 +10,11 @@ module Coloredcoins
 
     def sign
       check
-      tx.inputs.each_with_index do |_input, i|
-        # signature_hash = tx.signature_hash_for_input(i, tx)
+      tx.inputs.each_with_index do |input, i|
         sig = key.sign(redeem_script)
-        public_script = Bitcoin::Script.to_signature_pubkey_script(sig, [key.pub].pack('H*'))
-        tx.inputs[i].script_sig = public_script
-        raise Coloredcoins::InvalidSignatureError, 'Invalid signature' unless tx.verify_input_signature(i, public_script)
+        public_script = Bitcoin::Script.to_signature_pubkey_script(sig, pub_key)
+        input.script_sig = public_script
+        raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, public_script)
       end
       true
     end
@@ -28,6 +27,10 @@ module Coloredcoins
              end
     rescue RuntimeError => e
       raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
+    end
+
+    def pub_key
+      [key.pub].pack('H*')
     end
 
     def redeem_script
@@ -44,6 +47,10 @@ module Coloredcoins
     end
 
   private
+
+    def valid_sig?(i, public_script)
+      tx.verify_input_signature(i, public_script)
+    end
 
     def check
       raise ArgumentError, 'Please set "key" before signing'      unless key
