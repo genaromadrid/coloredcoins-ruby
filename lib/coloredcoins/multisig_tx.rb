@@ -39,7 +39,8 @@ module Coloredcoins
     end
 
     def broadcast
-      Coloredcoins.broadcast(to_hex)
+      response = Coloredcoins.broadcast(to_hex)
+      response[:txId]
     end
 
     private

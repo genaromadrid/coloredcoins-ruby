@@ -9,7 +9,8 @@ module Coloredcoins
     end
 
     def to_hex
-      tx.scrub.unpack('H*').first
+      raw_tx = Bitcoin::P::Tx.binary_from_json(tx.to_json)
+      raw_tx.scrub.unpack('H*').first
     end
 
   end

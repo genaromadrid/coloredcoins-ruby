@@ -17,6 +17,7 @@ describe Coloredcoins::MultisigTx do
 
   before do
     Bitcoin.network = :bitcoin
+    Coloredcoins.network = Coloredcoins::TESTNET
   end
 
   subject do
@@ -47,6 +48,19 @@ describe Coloredcoins::MultisigTx do
         end
       end
     end
+  end
 
+  describe '#broadcast' do
+    let!(:tx_id) { 'some-transaction-hash' }
+    let!(:broadcast_response) { { txId: tx_id } }
+
+    before do
+      allow(Coloredcoins).to receive(:broadcast).and_return(broadcast_response)
+    end
+    before { @response = subject.broadcast }
+
+    it { expect(Coloredcoins).to have_received(:broadcast).once }
+
+    it { expect(@response).to eq(tx_id) }
   end
 end
