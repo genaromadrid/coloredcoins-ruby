@@ -11,5 +11,8 @@ end if ENV['COVERAGE']
 
 require 'pry'
 require 'rubygems'
+require 'webmock/rspec'
 require 'bundler/setup'
 Bundler.require(:default)
+
+WebMock.disable_net_connect!(allow_localhost: true)

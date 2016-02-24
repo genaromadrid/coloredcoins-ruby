@@ -28,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bump', '~> 0.5', '>= 0.5.3'
   spec.add_development_dependency 'rubocop',     '~> 0.36'
   spec.add_development_dependency 'simplecov',   '~> 0.11'
+  spec.add_development_dependency 'webmock'
 end
