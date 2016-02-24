@@ -1,5 +1,4 @@
 describe Coloredcoins::API do
-
   describe '#network' do
     Coloredcoins::NETS.each do |network|
       context "when Coloredcoins.network is '#{network}'" do

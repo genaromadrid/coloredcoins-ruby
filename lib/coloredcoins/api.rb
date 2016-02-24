@@ -44,7 +44,7 @@ module Coloredcoins
     end
 
     # http://coloredcoins.org/documentation/#GetAssetHolders
-    def asset_holders(asset_id, num_confirmations=1)
+    def asset_holders(asset_id, num_confirmations = 1)
       @connection.get("/stakeholders/#{asset_id}/#{num_confirmations}")
     end
 
@@ -52,6 +52,5 @@ module Coloredcoins
     def asset_metadata(asset_id, utxo)
       @connection.get("/assetmetadata/#{asset_id}/#{utxo}")
     end
-
   end
 end

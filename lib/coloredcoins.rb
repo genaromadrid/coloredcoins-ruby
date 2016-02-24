@@ -12,14 +12,14 @@ module Coloredcoins
   ConnectionError = Class.new StandardError
   InvalidKeyError = Class.new RuntimeError
 
-  API_VERSION = 'v3'
+  API_VERSION = 'v3'.freeze
   NETS = [
-    MAINNET = 'mainnet',
-    TESTNET = 'testnet'
-  ]
+    MAINNET = 'mainnet'.freeze,
+    TESTNET = 'testnet'.freeze
+  ].freeze
 
   def self.api
-    @api ||= API.new(network:network, api_version:API_VERSION)
+    @api ||= API.new(network: network, api_version: API_VERSION)
   end
 
   def self.network
@@ -28,7 +28,7 @@ module Coloredcoins
 
   def self.network=(network)
     @network = network
-    @api = API.new(network:network, api_version:API_VERSION)
+    @api = API.new(network: network, api_version: API_VERSION)
   end
 
   def self.method_missing(sym, *args, &block)
