@@ -7,8 +7,9 @@ SimpleCov.start do
     SimpleCov.result.format!
     system('open tmp/coverage/index.html') if RUBY_PLATFORM['darwin']
   end
-end
+end if ENV['COVERAGE']
 
+require 'pry'
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default)
