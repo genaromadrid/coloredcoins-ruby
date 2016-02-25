@@ -25,5 +25,10 @@ module Coloredcoins
       @new_tx
     end
 
+    def broadcast
+      response = Coloredcoins.broadcast(to_hex)
+      return response[:txId] if response[:txId]
+      response
+    end
   end
 end
