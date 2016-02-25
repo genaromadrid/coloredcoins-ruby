@@ -10,12 +10,27 @@ module Coloredcoins
 
     def sign(key)
       check
-      key, pub_key_hex = build_key(key)
+      key = build_key(key) unless key.is_a?(Array)
       tx.inputs.each_with_index do |input, i|
-        sig = key.sign(redeem_script)
-        public_script = Bitcoin::Script.to_signature_pubkey_script(sig, pub_key_hex)
-        input.script_sig = public_script
-        raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, public_script)
+        sig_hash = tx.signature_hash_for_input(i, redeem_script)
+        if key.is_a?(Array)
+          sigs = []
+          key.each do |k|
+            sigs << k.sign(sig_hash)
+          end
+        else
+          sigs = [key.sign(sig_hash)]
+        end
+
+        script_sig = Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
+        sigs.each do |sig|
+          script_sig = Bitcoin::Script.add_sig_to_multisig_script_sig(sig, script_sig)
+        end
+        script_sig = Bitcoin::Script.sort_p2sh_multisig_signatures(script_sig, sig_hash)
+
+        input.script_sig = script_sig
+        script = Bitcoin::Script.new(script_sig)
+        raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, script_sig)
       end
       true
     end
@@ -37,14 +52,13 @@ module Coloredcoins
 
     def build_key(key)
       key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
-      pub_hex = [key.pub].pack('H*')
-      return [key, pub_hex]
+      key
     rescue RuntimeError => e
       raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
     end
 
-    def valid_sig?(i, public_script)
-      tx.verify_input_signature(i, public_script)
+    def valid_sig?(i, script)
+      tx.verify_input_signature(i, script)
     end
 
     def check
