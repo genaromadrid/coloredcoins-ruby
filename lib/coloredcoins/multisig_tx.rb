@@ -10,14 +10,13 @@ module Coloredcoins
 
     def sign(key)
       check
-      key = build_key(key) unless key.is_a?(Array)
+      key = build_key(key)
       tx.inputs.each_with_index do |input, i|
-        sig_hash    = tx.signature_hash_for_input(i, redeem_script)
-        sigs        = sign_hash(key, sig_hash)
-        script_sig  = build_script_sig(sigs, sig_hash)
+        sig_hash   = tx.signature_hash_for_input(i, redeem_script)
+        sigs       = build_sigs(key, sig_hash)
+        initial    = input.script_sig.or(initial_script)
 
-        input.script_sig = script_sig
-        raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, script_sig)
+        input.script_sig = build_script_sig(sigs, sig_hash, initial)
       end
       true
     end
@@ -32,31 +31,15 @@ module Coloredcoins
 
   private
 
-    def sign_hash(key, sig_hash)
-      if key.is_a?(Array)
-        sigs = []
-        key.each do |k|
-          sigs << k.sign(sig_hash)
-        end
-      else
-        sigs = [key.sign(sig_hash)]
-      end
-      sigs
+    def initial_script
+      @initial_script ||= Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
     end
 
-    def build_script_sig(sigs, sig_hash)
-      script_sig = Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
+    def build_script_sig(sigs, sig_hash, initial)
       sigs.each do |sig|
-        script_sig = Bitcoin::Script.add_sig_to_multisig_script_sig(sig, script_sig)
+        Bitcoin::Script.add_sig_to_multisig_script_sig(sig, initial)
       end
-      Bitcoin::Script.sort_p2sh_multisig_signatures(script_sig, sig_hash)
-    end
-
-    def build_key(key)
-      key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
-      key
-    rescue RuntimeError => e
-      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
+      Bitcoin::Script.sort_p2sh_multisig_signatures(initial, sig_hash)
     end
 
     def valid_sig?(i, script)
@@ -69,5 +52,11 @@ module Coloredcoins
         raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
       end
     end
+  end
+end
+
+class String
+  def or(what)
+    strip.empty? ? what : self
   end
 end

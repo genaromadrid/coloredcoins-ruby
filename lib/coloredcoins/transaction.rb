@@ -27,5 +27,20 @@ module Coloredcoins
       return response[:txId] if response[:txId]
       response
     end
+
+  protected
+
+    def build_key(key)
+      return key if key.is_a?(Array)
+      key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
+      key
+    rescue RuntimeError => e
+      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
+    end
+
+    def build_sigs(key, sig_hash)
+      key = [key] unless key.is_a?(Array)
+      key.map { |k| k.sign(sig_hash) }
+    end
   end
 end
