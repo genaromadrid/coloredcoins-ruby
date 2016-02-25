@@ -14,14 +14,11 @@ module Coloredcoins
     end
 
     def new_tx
-      h = JSON.load(tx.to_json)
-      @new_tx = Bitcoin::P::Tx.new(nil)
-      @new_tx.ver = (h['ver'] || h['version'])
-      @new_tx.lock_time = h['lock_time']
-      ins  = h['in']  || h['inputs']
-      outs = h['out'] || h['outputs']
-      ins .each { |input|   @new_tx.add_in  Bitcoin::P::TxIn.from_hash(input)   }
-      outs.each { |output|  @new_tx.add_out Bitcoin::P::TxOut.from_hash(output) }
+      @new_tx = Bitcoin::P::Tx.new
+      @new_tx.ver = tx.ver
+      @new_tx.lock_time = tx.lock_time
+      tx.in.each  { |input|   @new_tx.add_in(input)   }
+      tx.out.each { |output|  @new_tx.add_out(output) }
       @new_tx
     end
 
