@@ -71,10 +71,10 @@ publ_keys = [
 ]
 wif = 'Kz6XuRHniKZfWxSLSC7YdN8AmB6oXaDSfHhxa6TPfwmcAC8URE7b'
 transaction = Coloredcoins::MultisigTx.build(tx_hex) do |tx|
-  tx.key = wif
   tx.m = 2 # 'm' x n Multisig
   tx.pub_keys = pub_keys
 end
+transaction.sign(wif)
 # Broadcast returns the broadcasted transaction id
 transaction.broadcast # => '98a1ebf2b80eafe4cc58bb01e1eb74a09038e60a67032cacdb3dfb8bf83175de'
 ```
