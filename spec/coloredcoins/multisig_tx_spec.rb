@@ -114,15 +114,23 @@ describe Coloredcoins::MultisigTx do
           end
 
           context 'when signing with another key' do
+            let!(:partially_signed_tx) do
+              Coloredcoins::MultisigTx.build(subject.to_hex) do |tx|
+                tx.m = m
+                tx.pub_keys = pub_keys
+              end
+            end
+            let(:tx) { partially_signed_tx.tx }
+
             it 'should be valid' do
-              subject.sign(keys[2])
+              partially_signed_tx.sign(keys[1])
               tx.inputs.each_with_index do |_input, i|
                 expect(tx.verify_input_signature(i, prev_tx)).to be true
               end
             end
 
             it 'can be converted to hex' do
-              expect { subject.to_hex }.not_to raise_error
+              expect { partially_signed_tx.to_hex }.not_to raise_error
             end
           end
         end

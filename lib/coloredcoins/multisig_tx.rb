@@ -14,7 +14,12 @@ module Coloredcoins
       tx.inputs.each_with_index do |input, i|
         sig_hash    = tx.signature_hash_for_input(i, redeem_script)
         sigs        = build_sigs(key, sig_hash)
-        script_sig  = build_script_sig(sigs, sig_hash)
+        initial_script_sig = if input.script_sig.empty?
+            Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
+          else
+            input.script_sig
+          end
+        script_sig  = build_script_sig(sigs, sig_hash, initial_script_sig)
 
         input.script_sig = script_sig
         raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, script_sig)
@@ -32,16 +37,11 @@ module Coloredcoins
 
   private
 
-    def initial_script_sig
-      @initial_script_sig ||= Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
-    end
-
-    def build_script_sig(sigs, sig_hash)
-      script_sig = initial_script_sig
+    def build_script_sig(sigs, sig_hash, initial_script_sig)
       sigs.each do |sig|
-        script_sig = Bitcoin::Script.add_sig_to_multisig_script_sig(sig, script_sig)
+        Bitcoin::Script.add_sig_to_multisig_script_sig(sig, initial_script_sig)
       end
-      Bitcoin::Script.sort_p2sh_multisig_signatures(script_sig, sig_hash)
+      Bitcoin::Script.sort_p2sh_multisig_signatures(initial_script_sig, sig_hash)
     end
 
     def valid_sig?(i, script)
