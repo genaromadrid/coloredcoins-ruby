@@ -32,8 +32,12 @@ module Coloredcoins
 
   private
 
+    def initial_script_sig
+      @initial_script_sig ||= Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
+    end
+
     def build_script_sig(sigs, sig_hash)
-      script_sig = Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
+      script_sig = initial_script_sig
       sigs.each do |sig|
         script_sig = Bitcoin::Script.add_sig_to_multisig_script_sig(sig, script_sig)
       end

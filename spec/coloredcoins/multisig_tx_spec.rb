@@ -108,6 +108,23 @@ describe Coloredcoins::MultisigTx do
               expect(tx.verify_input_signature(i, prev_tx)).to be false
             end
           end
+
+          it 'can be converted to hex' do
+            expect { subject.to_hex }.not_to raise_error
+          end
+
+          context 'when signing with another key' do
+            it 'should be valid' do
+              subject.sign(keys[2])
+              tx.inputs.each_with_index do |_input, i|
+                expect(tx.verify_input_signature(i, prev_tx)).to be true
+              end
+            end
+
+            it 'can be converted to hex' do
+              expect { subject.to_hex }.not_to raise_error
+            end
+          end
         end
       end
 
@@ -121,6 +138,10 @@ describe Coloredcoins::MultisigTx do
             tx.inputs.each_with_index do |_input, i|
               expect(tx.verify_input_signature(i, prev_tx)).to be true
             end
+          end
+
+          it 'can be converted to hex' do
+            expect { subject.to_hex }.not_to raise_error
           end
         end
       end
