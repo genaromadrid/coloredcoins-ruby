@@ -32,7 +32,6 @@ describe Coloredcoins::MultisigTx do
 
   subject do
     Coloredcoins::MultisigTx.build(tx_hex) do |tx|
-      tx.key = wif
       tx.m = 2
       tx.pub_keys = pub_keys
     end
@@ -49,7 +48,7 @@ describe Coloredcoins::MultisigTx do
       end
 
       it 'can be converted to hex' do
-        expect{ subject.to_hex }.not_to raise_error
+        expect { subject.to_hex }.not_to raise_error
       end
 
       it 'to_hex should be the same as the given hex' do
@@ -58,7 +57,7 @@ describe Coloredcoins::MultisigTx do
     end
 
     describe 'after sign' do
-      before { subject.sign }
+      before { subject.sign(wif) }
 
       it 'inputs should be signed' do
         tx.inputs.each do |input|

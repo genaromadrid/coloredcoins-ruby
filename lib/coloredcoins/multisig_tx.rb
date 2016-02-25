@@ -8,29 +8,16 @@ module Coloredcoins
       transaction
     end
 
-    def sign
+    def sign(key)
       check
+      key, pub_key_hex = build_key(key)
       tx.inputs.each_with_index do |input, i|
         sig = key.sign(redeem_script)
-        public_script = Bitcoin::Script.to_signature_pubkey_script(sig, pub_key)
+        public_script = Bitcoin::Script.to_signature_pubkey_script(sig, pub_key_hex)
         input.script_sig = public_script
         raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, public_script)
       end
       true
-    end
-
-    def key=(key)
-      @key = if key.is_a?(Bitcoin::Key)
-               key
-             else
-               Bitcoin::Key.from_base58(key)
-             end
-    rescue RuntimeError => e
-      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
-    end
-
-    def pub_key
-      [key.pub].pack('H*')
     end
 
     def redeem_script
@@ -48,12 +35,19 @@ module Coloredcoins
 
   private
 
+    def build_key(key)
+      key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
+      pub_hex = [key.pub].pack('H*')
+      return [key, pub_hex]
+    rescue RuntimeError => e
+      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
+    end
+
     def valid_sig?(i, public_script)
       tx.verify_input_signature(i, public_script)
     end
 
     def check
-      raise ArgumentError, 'Please set "key" before signing'      unless key
       raise ArgumentError, 'Please set "m" before signing'        unless m
       raise ArgumentError, 'Please set "pub_keys" before signing' unless pub_keys
     end
