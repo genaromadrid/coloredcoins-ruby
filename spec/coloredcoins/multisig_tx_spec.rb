@@ -61,7 +61,13 @@ describe Coloredcoins::MultisigTx do
     end
 
     describe 'after sign' do
-      before { subject.sign(wif) }
+      let!(:key) do
+        [
+          Bitcoin::Key.new(priv_keys[0], pub_keys[0]),
+          Bitcoin::Key.new(priv_keys[1], pub_keys[1])
+        ]
+      end
+      before { subject.sign(key) }
 
       it 'inputs should be signed' do
         tx.inputs.each do |input|
@@ -70,7 +76,7 @@ describe Coloredcoins::MultisigTx do
       end
 
       it 'can be converted to hex' do
-        expect(subject.to_hex).not_to raise_error
+        expect { subject.to_hex }.not_to raise_error
       end
     end
   end
