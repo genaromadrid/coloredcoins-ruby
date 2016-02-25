@@ -31,6 +31,7 @@ module Coloredcoins
   protected
 
     def build_key(key)
+      return key if key.is_a?(Array)
       key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
       key
     rescue RuntimeError => e
@@ -38,15 +39,8 @@ module Coloredcoins
     end
 
     def build_sigs(key, sig_hash)
-      if key.is_a?(Array)
-        sigs = []
-        key.each do |k|
-          sigs << k.sign(sig_hash)
-        end
-      else
-        sigs = [key.sign(sig_hash)]
-      end
-      sigs
+      key = [key] unless key.is_a?(Array)
+      key.map { |k| k.sign(sig_hash) }
     end
   end
 end

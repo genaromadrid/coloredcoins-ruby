@@ -10,7 +10,7 @@ module Coloredcoins
 
     def sign(key)
       check
-      key = build_key(key) unless key.is_a?(Array)
+      key = build_key(key)
       tx.inputs.each_with_index do |input, i|
         sig_hash    = tx.signature_hash_for_input(i, redeem_script)
         sigs        = build_sigs(key, sig_hash)
