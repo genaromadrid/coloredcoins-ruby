@@ -1,7 +1,7 @@
 notification :terminal_notifier
 
 rspec_options = {
-  all_after_pass: false,
+  all_after_pass: true,
   cmd: 'rspec spec',
   failed_mode: :focus
 }
