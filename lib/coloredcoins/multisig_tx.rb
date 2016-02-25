@@ -29,7 +29,6 @@ module Coloredcoins
         script_sig = Bitcoin::Script.sort_p2sh_multisig_signatures(script_sig, sig_hash)
 
         input.script_sig = script_sig
-        script = Bitcoin::Script.new(script_sig)
         raise Coloredcoins::InvalidSignatureError unless valid_sig?(i, script_sig)
       end
       true
