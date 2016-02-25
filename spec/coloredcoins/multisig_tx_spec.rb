@@ -21,6 +21,7 @@ describe Coloredcoins::MultisigTx do
     )
   end
   let!(:wif)       { priv_keys[0] }
+  # rubocop:disable Metrics/LineLength
   let!(:pub_keys)  do
     %w(
       047a130127056525587eac13ad69f23c5e198d596025f65ac33d769e54fa3e3094b7aa4bad47aec9a0b1d487fd2b4f41eed468079de70f4526c721924ac3bfd121
@@ -28,6 +29,7 @@ describe Coloredcoins::MultisigTx do
       0499df3d55d5741a2222d9a5d175e3bbd9124e61b4c7f5830356c0d8082861a0e3c61ee29ec2eaabd693f5f83568dfea0add98b1c3e971b9da7b01ed97ab3b74fb
     )
   end
+  # rubocop:enable Metrics/LineLength
 
   before do
     Bitcoin.network = :testnet
