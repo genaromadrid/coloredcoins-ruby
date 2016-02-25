@@ -57,6 +57,10 @@ describe Coloredcoins::MultisigTx do
           expect(input.script_sig).not_to be_empty
         end
       end
+
+      it 'can be converted to hex' do
+        expect(subject.to_hex).not_to raise_error
+      end
     end
   end
 
