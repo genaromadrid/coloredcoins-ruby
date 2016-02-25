@@ -63,23 +63,37 @@ describe Coloredcoins::MultisigTx do
     end
 
     describe 'after sign' do
-      let!(:key) do
-        [
-          Bitcoin::Key.new(priv_keys[0], pub_keys[0]),
-          Bitcoin::Key.new(priv_keys[1], pub_keys[1])
-        ]
-      end
-      before { subject.sign(key) }
+      shared_examples 'after_sign_transaction' do
+        before { subject.sign(key) }
 
-      it 'inputs should be signed' do
-        tx.inputs.each do |input|
-          expect(input.script_sig).not_to be_empty
+        it 'inputs should be signed' do
+          tx.inputs.each do |input|
+            expect(input.script_sig).not_to be_empty
+          end
+        end
+
+        it 'can be converted to hex' do
+          expect { subject.to_hex }.not_to raise_error
         end
       end
 
-      it 'can be converted to hex' do
-        expect { subject.to_hex }.not_to raise_error
+      context 'with one key' do
+        it_behaves_like 'after_sign_transaction' do
+          let!(:key) { Bitcoin::Key.new(priv_keys[0], pub_keys[0]) }
+        end
       end
+
+      context 'with several keys' do
+        it_behaves_like 'after_sign_transaction' do
+          let!(:key) do
+            [
+              Bitcoin::Key.new(priv_keys[0], pub_keys[0]),
+              Bitcoin::Key.new(priv_keys[1], pub_keys[1])
+            ]
+          end
+        end
+      end
+
     end
   end
 
