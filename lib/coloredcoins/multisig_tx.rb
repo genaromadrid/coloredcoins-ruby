@@ -1,6 +1,6 @@
 module Coloredcoins
   class MultisigTx < Transaction
-    attr_accessor :m, :pub_keys, :key
+    attr_accessor :m, :pub_keys, :redeem_script
 
     def self.build(tx_hex)
       transaction = MultisigTx.new(tx_hex)
@@ -48,8 +48,10 @@ module Coloredcoins
     end
 
     def check
-      raise ArgumentError, 'Please set "m" before signing'        unless m
-      raise ArgumentError, 'Please set "pub_keys" before signing' unless pub_keys
+      raise ArgumentError, 'Set "m" before signing' unless m
+      if !pub_keys && !redeem_script
+        raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
+      end
     end
   end
 end
