@@ -6,6 +6,8 @@ rspec_options = {
   failed_mode: :focus
 }
 
+clearing :on
+
 guard :rspec, rspec_options do
   require 'ostruct'
 
