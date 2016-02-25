@@ -3,30 +3,34 @@ require 'bitcoin'
 describe Coloredcoins::MultisigTx do
   let!(:tx_hex) do
     %w(
-      0100000001719317d1d89cbbe89f0783053b5a6ba16ab584ac
-      6f9a60ed25cafe94c6f9f3680000000000ffffffff02000000
-      0000000000096a074343010527b010ce8101000000000017a91
-      41442dada3e43b037543440bad2ad9695a360a6558700000000
+      010000000125b956a45ff3c6927ab85aaed92d88cdbea00a0d81
+      341cfe535b982ab50cf9f70000000000ffffffff03ac02000000
+      00000047512103ffffffffffffffffffffffffffffffffffffff
+      ffffffffffffffffffffffffff2103caf376cb1cb7d09e33bf35
+      5c4c7f5b7962502173627efbd1e3d2fc16573a65fb52ae000000
+      00000000001c6a1a4343020287d1e95ca859b73cda02c81c772b
+      a186dc1a12a00110e45c01000000000017a914e1088f81edc427
+      ec81f128e2eac8e2f0e62465cd8700000000
     ).join
   end
   let!(:priv_keys) do
     %w(
-      Kz6XuRHniKZfWxSLSC7YdN8AmB6oXaDSfHhxa6TPfwmcAC8URE7b
-      L3u4otRKpgBwC8JaJPGiWpYWaLQqQngVVhmG6bZXoEL6V85bywnd
-      KzaAL6uKn2zHUULhsESuDDNguS2TsjDZv3ebgiFbFzGSqg5oMZ89
+      44159687da678ccc3374cd63a8be34727bb34a9a7ce02e1de0bb2c0a2c0a9ca8
+      7ac707d5cf0198fd10b0aa267367c09feae8cf8cbe008b4b9840c67c3d0af4a1
+      eb3ed894a8ea4f897884a65b9ef8d9f4d1704b9fe88f4133bb0c9d66d6420a7a
     )
   end
-  let!(:wif)       { priv_keys[1] }
+  let!(:wif)       { priv_keys[0] }
   let!(:pub_keys)  do
     %w(
-      03ae3cf1075ab2c7544d973903c089295ab195af63a8f3c168c9b8901b457d9ce2
-      0352f75a371a1331fa51a20b5e6e1e4ab8f86a1f65dd36fe44a9f7ce5d2a706946
-      0330959f464f88f7294cc412a81f72f3cb817a2738a16e187d99b8e78c4ccf9e3b
+      047a130127056525587eac13ad69f23c5e198d596025f65ac33d769e54fa3e3094b7aa4bad47aec9a0b1d487fd2b4f41eed468079de70f4526c721924ac3bfd121
+      0442dbb77ea49ebe546982d2ad1cb0bea3ff3abfe8fb636858295622f8c5cbfd07b5a66e811e5178d8971a5f352299c163258aa6d81b56c980b679f1644b1dfd80
+      0499df3d55d5741a2222d9a5d175e3bbd9124e61b4c7f5830356c0d8082861a0e3c61ee29ec2eaabd693f5f83568dfea0add98b1c3e971b9da7b01ed97ab3b74fb
     )
   end
 
   before do
-    Bitcoin.network = :bitcoin
+    Bitcoin.network = :testnet
     Coloredcoins.network = Coloredcoins::TESTNET
   end
 
