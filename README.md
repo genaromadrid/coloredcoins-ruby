@@ -1,5 +1,7 @@
 # Coloredcoins
 
+[![Build Status][travis-image]][travis-url]
+
 Ruby wrapper for coloredcoins.org
 
 ## Installation
@@ -118,3 +120,6 @@ Coloredcoins.asset_metadata(asset_id, utxo)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+[travis-image]: https://travis-ci.org/genaromadrid/coloredcoins-ruby.svg?branch=master
+[travis-url]: https://travis-ci.org/genaromadrid/coloredcoins-ruby
