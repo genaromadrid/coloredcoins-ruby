@@ -1,5 +1,6 @@
 # Coloredcoins
 
+[![Gem Version][rubygems-image]][rubygems-url]
 [![Build Status][travis-image]][travis-url]
 [![Coverage Status][coverage-image]][coverage-url]
 
@@ -122,6 +123,8 @@ Coloredcoins.asset_metadata(asset_id, utxo)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
+[rubygems-image]: https://badge.fury.io/rb/coloredcoins.svg
+[rubygems-url]: https://badge.fury.io/rb/coloredcoins
 [travis-image]: https://travis-ci.org/genaromadrid/coloredcoins-ruby.svg?branch=master
 [travis-url]: https://travis-ci.org/genaromadrid/coloredcoins-ruby
 [coverage-image]: https://coveralls.io/repos/github/genaromadrid/coloredcoins-ruby/badge.svg?branch=master
