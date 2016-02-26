@@ -1,6 +1,7 @@
 # Coloredcoins
 
 [![Build Status][travis-image]][travis-url]
+[![Coverage Status][coverage-image]][coverage-url]
 
 Ruby wrapper for coloredcoins.org
 
@@ -123,3 +124,5 @@ Coloredcoins.asset_metadata(asset_id, utxo)
 
 [travis-image]: https://travis-ci.org/genaromadrid/coloredcoins-ruby.svg?branch=master
 [travis-url]: https://travis-ci.org/genaromadrid/coloredcoins-ruby
+[coverage-image]: https://coveralls.io/repos/github/genaromadrid/coloredcoins-ruby/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/genaromadrid/coloredcoins-ruby?branch=master
