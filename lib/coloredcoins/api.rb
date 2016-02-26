@@ -4,7 +4,7 @@ module Coloredcoins
                 :api_version,
                 :connection
 
-    def initialize(network:Coloredcoins.network, api_version:'v3')
+    def initialize(network = Coloredcoins.network, api_version = 'v3')
       @network = network
       @api_version = api_version
       @connection = Connection.new(url)
