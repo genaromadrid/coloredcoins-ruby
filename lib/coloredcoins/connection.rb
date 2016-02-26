@@ -2,6 +2,8 @@ require 'rest-client'
 
 module Coloredcoins
   class Connection
+    attr_reader :url
+
     def initialize(url = nil)
       @url = url
     end
