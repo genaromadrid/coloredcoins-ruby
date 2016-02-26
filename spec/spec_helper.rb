@@ -1,10 +1,9 @@
-require 'coveralls'
-Coveralls.wear!
-
 require 'simplecov'
+require 'coveralls'
 SimpleCov.start do
   add_filter '/spec/'
 end
+Coveralls.wear!
 
 require 'pry'
 require 'rubygems'
