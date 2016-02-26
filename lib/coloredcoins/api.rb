@@ -1,7 +1,8 @@
 module Coloredcoins
   class API
     attr_reader :network,
-                :api_version
+                :api_version,
+                :connection
 
     def initialize(network:Coloredcoins.network, api_version:'v3')
       @network = network
