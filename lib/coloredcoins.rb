@@ -19,7 +19,7 @@ module Coloredcoins
   ].freeze
 
   def self.api
-    @api ||= API.new(network: network, api_version: API_VERSION)
+    @api ||= API.new(network, API_VERSION)
   end
 
   def self.network
@@ -28,7 +28,7 @@ module Coloredcoins
 
   def self.network=(network)
     @network = network
-    @api = API.new(network: network, api_version: API_VERSION)
+    @api = API.new(network, API_VERSION)
   end
 
   def self.method_missing(sym, *args, &block)

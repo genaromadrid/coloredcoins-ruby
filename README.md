@@ -23,7 +23,7 @@ Or install it yourself as:
 
 Initialize the API
 
-```
+```ruby
 network = Coloredcoins::TESTNET
 api_version = 'v3' # defaults to 'v3'
 api = Coloredcoins::API.new(network, api_version)
