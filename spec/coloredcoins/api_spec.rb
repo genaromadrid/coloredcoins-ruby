@@ -26,4 +26,53 @@ describe Coloredcoins::API do
       end
     end
   end
+
+  describe 'conncetion methods' do
+    before do
+      allow(subject.connection).to receive(:post)
+      allow(subject.connection).to receive(:get)
+    end
+
+    describe '#issue_asset' do
+      it 'should call connection' do
+        subject.issue_asset({})
+        expect(subject.connection).to have_received(:post).with(/issue/, {})
+      end
+    end
+
+    describe '#send_asset' do
+      it 'should call connection' do
+        subject.send_asset({})
+        expect(subject.connection).to have_received(:post).with(/sendasset/, {})
+      end
+    end
+
+    describe '#broadcast' do
+      it 'should call connection' do
+        subject.broadcast('hex')
+        expect(subject.connection).to have_received(:post).with(/broadcast/, txHex: 'hex')
+      end
+    end
+
+    describe '#address_info' do
+      it 'should call connection' do
+        subject.address_info('2NDm6HFAeyQYUfMXyFnd9yz5JBSkkWsj7Vz')
+        expect(subject.connection).to have_received(:get).with(/addressinfo/)
+      end
+    end
+
+    describe '#asset_holders' do
+      it 'should call connection' do
+        subject.asset_holders('asset_id', 1)
+        expect(subject.connection).to have_received(:get).with(/stakeholders/)
+      end
+    end
+
+    describe '#asset_metadata' do
+      it 'should call connection' do
+        subject.asset_metadata('asset_id', 'utxo:1')
+        expect(subject.connection).to have_received(:get).with(/assetmetadata/)
+      end
+    end
+  end
 end
