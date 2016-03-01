@@ -1,10 +1,12 @@
+require 'bitcoin'
 require 'coloredcoins/version'
 
 module Coloredcoins
-  autoload :API,        'coloredcoins/api'
-  autoload :Connection, 'coloredcoins/connection'
+  autoload :API,         'coloredcoins/api'
+  autoload :Connection,  'coloredcoins/connection'
   autoload :Transaction, 'coloredcoins/transaction'
-  autoload :MultisigTx, 'coloredcoins/multisig_tx'
+  autoload :Multisig,    'coloredcoins/multisig'
+  autoload :MultisigTx,  'coloredcoins/multisig_tx'
 
   attr_writer :api
 
