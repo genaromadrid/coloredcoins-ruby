@@ -1,6 +1,9 @@
 module Coloredcoins
   class MultisigTx < Transaction
-    attr_accessor :m, :pub_keys, :redeem_script
+    attr_accessor :m,
+                  :pub_keys,
+                  :redeem_script,
+                  :multisig
 
     def self.build(tx_hex)
       transaction = MultisigTx.new(tx_hex)
@@ -10,45 +13,23 @@ module Coloredcoins
 
     def sign(key)
       check
-      key = build_key(key)
-      tx.inputs.each_with_index do |input, i|
-        sig_hash   = tx.signature_hash_for_input(i, redeem_script)
-        sigs       = build_sigs(key, sig_hash)
-        initial    = input.script_sig.or(initial_script)
-
-        input.script_sig = build_script_sig(sigs, sig_hash, initial)
-      end
+      multisig.sign(tx, key)
       true
     end
 
-    def redeem_script
-      @redeem_script ||= Bitcoin::Script.to_p2sh_multisig_script(m, *pub_keys).last
+    def multisig
+      @multisig ||= Coloredcoins::Multisig.new(m, pub_keys)
     end
 
-    def address
-      @address ||= Bitcoin.hash160_to_p2sh_address(Bitcoin.hash160(redeem_script.hth))
+    def redeem_script=(script)
+      multisig.redeem_script = script
     end
 
   private
 
-    def initial_script
-      @initial_script ||= Bitcoin::Script.to_p2sh_multisig_script_sig(redeem_script)
-    end
-
-    def build_script_sig(sigs, sig_hash, initial)
-      sigs.each do |sig|
-        Bitcoin::Script.add_sig_to_multisig_script_sig(sig, initial)
-      end
-      Bitcoin::Script.sort_p2sh_multisig_signatures(initial, sig_hash)
-    end
-
-    def valid_sig?(i, script)
-      tx.verify_input_signature(i, script)
-    end
-
     def check
-      raise ArgumentError, 'Set "m" before signing' unless m
-      if !pub_keys && !redeem_script
+      raise ArgumentError, 'Set "m" before signing' unless multisig.m
+      if !multisig.pub_keys && !multisig.redeem_script
         raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
       end
     end

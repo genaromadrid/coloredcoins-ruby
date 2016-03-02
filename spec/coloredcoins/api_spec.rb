@@ -27,7 +27,7 @@ describe Coloredcoins::API do
     end
   end
 
-  describe 'conncetion methods' do
+  describe 'connection methods' do
     before do
       allow(subject.connection).to receive(:post)
       allow(subject.connection).to receive(:get)
@@ -72,6 +72,28 @@ describe Coloredcoins::API do
       it 'should call connection' do
         subject.asset_metadata('asset_id', 'utxo:1')
         expect(subject.connection).to have_received(:get).with(/assetmetadata/)
+      end
+    end
+
+    describe 'called from class' do
+      before do
+        @api = Coloredcoins::API.new
+        allow(Coloredcoins).to receive(:api).and_return @api
+        allow(@api).to receive(:send).and_return true
+      end
+
+      %w(
+        issue_asset
+        send_asset
+        broadcast
+        address_info
+        asset_holders
+        asset_metadata
+      ).each do |method|
+        it do
+          Coloredcoins.send(method)
+          expect(@api).to have_received(:send)
+        end
       end
     end
   end
