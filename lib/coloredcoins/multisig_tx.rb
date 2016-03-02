@@ -18,7 +18,11 @@ module Coloredcoins
     end
 
     def multisig
-      @multisig ||= Coloredcoins::Multisig.new(m, *pub_keys)
+      @multisig ||= Coloredcoins::Multisig.new(m, pub_keys)
+    end
+
+    def redeem_script=(script)
+      multisig.redeem_script = script
     end
 
   private
