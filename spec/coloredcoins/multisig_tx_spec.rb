@@ -54,7 +54,7 @@ describe Coloredcoins::MultisigTx do
   end
 
   before do
-    Bitcoin.network = :testnet
+    Bitcoin.network = :testnet3
     Coloredcoins.network = Coloredcoins::TESTNET
   end
 

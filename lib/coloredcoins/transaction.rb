@@ -1,8 +1,19 @@
-require 'bitcoin'
-
 module Coloredcoins
   class Transaction
     attr_reader :tx
+
+    def self.build_key(key)
+      return key if key.is_a?(Array)
+      key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
+      key
+    rescue RuntimeError => e
+      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
+    end
+
+    def self.build_sigs(key, sig_hash)
+      key = [key] unless key.is_a?(Array)
+      key.map { |k| k.sign(sig_hash) }
+    end
 
     def initialize(hex)
       @tx = Bitcoin::P::Tx.new([hex].pack('H*'))
@@ -26,21 +37,6 @@ module Coloredcoins
       response = Coloredcoins.broadcast(to_hex)
       return response[:txId] if response[:txId]
       response
-    end
-
-  protected
-
-    def build_key(key)
-      return key if key.is_a?(Array)
-      key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
-      key
-    rescue RuntimeError => e
-      raise InvalidKeyError, 'Invalid key' if e.message == 'Invalid version'
-    end
-
-    def build_sigs(key, sig_hash)
-      key = [key] unless key.is_a?(Array)
-      key.map { |k| k.sign(sig_hash) }
     end
   end
 end
