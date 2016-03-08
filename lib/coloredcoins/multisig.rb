@@ -3,10 +3,6 @@ module Coloredcoins
     attr_reader :m, :pub_keys
     attr_accessor :redeem_script
 
-    def self.valid_sig?(i, script)
-      tx.verify_input_signature(i, script)
-    end
-
     def initialize(m = nil, pub_keys = nil)
       @m = m
       @pub_keys = pub_keys
@@ -21,6 +17,10 @@ module Coloredcoins
 
         input.script_sig = build_script_sig(sigs, sig_hash, initial)
       end
+    end
+
+    def valid_sig?(i, script)
+      tx.verify_input_signature(i, script)
     end
 
     def address
@@ -38,6 +38,8 @@ module Coloredcoins
     end
 
     def build_script_sig(sigs, sig_hash, initial)
+      # sort them first since they could not be sorted comming from a difirent library
+      initial = Bitcoin::Script.sort_p2sh_multisig_signatures(initial, sig_hash)
       sigs.each do |sig|
         Bitcoin::Script.add_sig_to_multisig_script_sig(sig, initial)
       end
