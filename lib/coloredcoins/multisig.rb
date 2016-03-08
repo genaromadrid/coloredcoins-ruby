@@ -38,6 +38,8 @@ module Coloredcoins
     end
 
     def build_script_sig(sigs, sig_hash, initial)
+      # sort them first since they could not be sorted comming from a difirent library
+      initial = Bitcoin::Script.sort_p2sh_multisig_signatures(initial, sig_hash)
       sigs.each do |sig|
         Bitcoin::Script.add_sig_to_multisig_script_sig(sig, initial)
       end
