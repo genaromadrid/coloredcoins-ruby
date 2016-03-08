@@ -2,7 +2,6 @@ module Coloredcoins
   class MultisigTx < Transaction
     attr_accessor :m,
                   :pub_keys,
-                  :redeem_script,
                   :multisig
 
     def self.build(tx_hex)
@@ -19,6 +18,10 @@ module Coloredcoins
 
     def multisig
       @multisig ||= Coloredcoins::Multisig.new(m, pub_keys)
+    end
+
+    def redeem_script
+      multisig.redeem_script
     end
 
     def redeem_script=(script)

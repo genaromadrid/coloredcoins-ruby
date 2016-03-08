@@ -13,6 +13,28 @@ describe Coloredcoins::MultisigTx do
       ec81f128e2eac8e2f0e62465cd8700000000
     ).join
   end
+  let!(:pre_signed_tx_hex) do
+    %w(
+      010000000125b956a45ff3c6927ab85aaed92d88cdbea00a0d813
+      41cfe535b982ab50cf9f700000000fd150100483045022100d57f
+      6d91ce7475d0e47e8ec76f486d1c6a24a04caad93b484b7d0dc3d7
+      d90ac802201e1793473e2c1b88695fe50b99ec8a92b88a947f21cb
+      d073cdf7aa03ffbf269b014cc95241047a130127056525587eac13
+      ad69f23c5e198d596025f65ac33d769e54fa3e3094b7aa4bad47ae
+      c9a0b1d487fd2b4f41eed468079de70f4526c721924ac3bfd12141
+      0442dbb77ea49ebe546982d2ad1cb0bea3ff3abfe8fb6368582956
+      22f8c5cbfd07b5a66e811e5178d8971a5f352299c163258aa6d81b
+      56c980b679f1644b1dfd80410499df3d55d5741a2222d9a5d175e3
+      bbd9124e61b4c7f5830356c0d8082861a0e3c61ee29ec2eaabd693
+      f5f83568dfea0add98b1c3e971b9da7b01ed97ab3b74fb53aeffff
+      ffff03ac0200000000000047512103ffffffffffffffffffffffff
+      ffffffffffffffffffffffffffffffffffffffff2103caf376cb1c
+      b7d09e33bf355c4c7f5b7962502173627efbd1e3d2fc16573a65fb
+      52ae00000000000000001c6a1a4343020287d1e95ca859b73cda02
+      c81c772ba186dc1a12a00110e45c01000000000017a914e1088f81
+      edc427ec81f128e2eac8e2f0e62465cd8700000000
+    ).join
+  end
   let!(:prev_tx_hex) do
     %w(
       0100000001463e1b35f72a4e978f2b7fb82f95823e90e4f50b30
@@ -113,26 +135,53 @@ describe Coloredcoins::MultisigTx do
             expect { subject.to_hex }.not_to raise_error
           end
 
-          context 'when signing with another key' do
+          context 'with another key' do
             let!(:partially_signed_tx) do
               Coloredcoins::MultisigTx.build(subject.to_hex) do |tx|
                 tx.m = m
                 tx.pub_keys = pub_keys
               end
             end
-            let(:tx) { partially_signed_tx.tx }
+            let(:partial_tx) { partially_signed_tx.tx }
 
-            it 'should be valid' do
-              partially_signed_tx.sign(keys[1])
-              tx.inputs.each_with_index do |_input, i|
-                expect(tx.verify_input_signature(i, prev_tx)).to be true
+            it { expect(partially_signed_tx.to_hex) }
+
+            context 'when signed' do
+              before { partially_signed_tx.sign(keys[1]) }
+
+              it 'should be valid' do
+                partial_tx.inputs.each_with_index do |_input, i|
+                  expect(partial_tx.verify_input_signature(i, prev_tx)).to be true
+                end
+              end
+
+              it 'can be converted to hex' do
+                expect { partially_signed_tx.to_hex }.not_to raise_error
               end
             end
-
-            it 'can be converted to hex' do
-              expect { partially_signed_tx.to_hex }.not_to raise_error
-            end
           end
+        end
+      end
+
+      context 'with a pre-signed signed tx' do
+        let!(:partially_signed_tx) do
+          Coloredcoins::MultisigTx.build(pre_signed_tx_hex) do |tx|
+            tx.m = m
+            tx.pub_keys = pub_keys
+          end
+        end
+        let(:tx) { partially_signed_tx.tx }
+
+        before { partially_signed_tx.sign(keys[1]) }
+
+        it 'should be valid' do
+          tx.inputs.each_with_index do |_input, i|
+            expect(tx.verify_input_signature(i, prev_tx)).to be true
+          end
+        end
+
+        it 'can be converted to hex' do
+          expect { partially_signed_tx.to_hex }.not_to raise_error
         end
       end
 
