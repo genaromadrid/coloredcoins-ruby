@@ -21,3 +21,8 @@ guard :rspec, rspec_options do
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/#{m[1]}_spec.rb" }
   watch(rspec.spec_helper)      { rspec.spec_dir }
 end
+
+guard :rubocop, all_on_start: true do
+  watch(/.+\.rb$/)
+  watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
+end

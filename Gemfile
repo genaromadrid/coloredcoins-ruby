@@ -7,5 +7,6 @@ group :development, :test do
   gem 'coveralls', require: false
   gem 'guard'
   gem 'guard-rspec'
+  gem 'guard-rubocop'
   gem 'terminal-notifier-guard'
 end
