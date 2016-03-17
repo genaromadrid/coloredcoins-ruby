@@ -35,8 +35,9 @@ module Coloredcoins
 
     def broadcast
       response = Coloredcoins.broadcast(to_hex)
-      return response[:txId] if response[:txId]
-      response
+      return response unless response[:txid]
+      txid = response[:txid]
+      txid.is_a?(Array) ? txid.first[:txid] : txid
     end
   end
 end

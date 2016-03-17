@@ -206,16 +206,31 @@ describe Coloredcoins::MultisigTx do
   end
 
   describe '#broadcast' do
-    let!(:tx_id) { 'some-transaction-hash' }
-    let!(:broadcast_response) { { txId: tx_id } }
+    shared_examples 'a success broadcast' do
+      before do
+        allow(Coloredcoins).to receive(:broadcast).and_return(broadcast_response)
+      end
+      before { @response = subject.broadcast }
 
-    before do
-      allow(Coloredcoins).to receive(:broadcast).and_return(broadcast_response)
+      it { expect(Coloredcoins).to have_received(:broadcast).once }
+
+      it { expect(@response).to eq(tx_id) }
     end
-    before { @response = subject.broadcast }
 
-    it { expect(Coloredcoins).to have_received(:broadcast).once }
+    context 'when receive an object - as mark in the documentation' do
+      let!(:tx_id) { 'some-transaction-hash' }
 
-    it { expect(@response).to eq(tx_id) }
+      it_behaves_like 'a success broadcast' do
+        let!(:broadcast_response) { { txid: tx_id } }
+      end
+    end
+
+    context 'when receive an array' do
+      let!(:tx_id) { 'some-transaction-hash' }
+
+      it_behaves_like 'a success broadcast' do
+        let!(:broadcast_response) { { txid: [{ txid: tx_id }] } }
+      end
+    end
   end
 end
