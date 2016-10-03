@@ -34,6 +34,11 @@ module Coloredcoins
   end
 
   def self.method_missing(sym, *args, &block)
-    api.send(sym, *args, &block)
+    return api.send(sym, *args, &block) if api.respond_to?(sym)
+    super
+  end
+
+  def self.respond_to_missing?(method_name, include_private = false)
+    api.respond_to?(method_name) || super
   end
 end

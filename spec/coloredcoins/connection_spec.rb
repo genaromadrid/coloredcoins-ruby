@@ -7,8 +7,12 @@ describe Coloredcoins::Connection do
     {
       method: nil,
       url: "#{base_url}#{path}",
-      payload: payload,
-      ssl_version: 'SSLv23'
+      payload: payload.to_json,
+      ssl_version: 'SSLv23',
+      headers: {
+        content_type: :json,
+        accept: :json
+      }
     }
   end
 
