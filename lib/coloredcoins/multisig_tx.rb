@@ -32,9 +32,8 @@ module Coloredcoins
 
     def check
       raise ArgumentError, 'Set "m" before signing' unless multisig.m
-      if !multisig.pub_keys && !multisig.redeem_script
-        raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
-      end
+      return true if multisig.pub_keys || multisig.redeem_script
+      raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
     end
   end
 end
