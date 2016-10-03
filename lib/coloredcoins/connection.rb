@@ -16,13 +16,17 @@ module Coloredcoins
       query :post, path, payload
     end
 
-    def query(method, path, payload = {})
+    def query(method, path, payload = {}) # rubocop:disable Metrics/MethodLength
       uri = endpoint_uri(path)
       response = RestClient::Request.execute(
         method: method,
         url: uri,
-        payload: payload,
-        ssl_version: 'SSLv23'
+        payload: payload.to_json,
+        ssl_version: 'SSLv23',
+        headers: {
+          content_type: :json,
+          accept: :json
+        }
       )
       JSON.parse(response, symbolize_names: true)
     rescue RestClient::ExceptionWithResponse => e
