@@ -34,6 +34,11 @@ module Coloredcoins
       @connection.post('/sendasset', asset)
     end
 
+    # http://coloredcoins.org/documentation/#BurnAsset
+    def burn_asset(args)
+      @connection.post('/burnasset', args)
+    end
+
     # http://coloredcoins.org/documentation/#BroadcastTransaction
     def broadcast(tx_hex)
       @connection.post('/broadcast', txHex: tx_hex)

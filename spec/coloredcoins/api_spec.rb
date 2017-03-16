@@ -68,6 +68,17 @@ describe Coloredcoins::API do
       end
     end
 
+    describe '#burn_asset' do
+      it 'should call connection' do
+        args = {
+          from: ['blah'],
+          burn: [{ assetId: 'blah', amount: 1 }]
+        }
+        subject.burn_asset(args)
+        expect(subject.connection).to have_received(:post).with(/burnasset/, args)
+      end
+    end
+
     describe '#asset_metadata' do
       it 'should call connection' do
         subject.asset_metadata('asset_id', 'utxo:1')
