@@ -10,6 +10,6 @@ group :development, :test do
   gem 'guard-rubocop'
   gem 'terminal-notifier-guard'
   # force gems for ruby <2.1.2
-  gem 'ruby_dep', '1.3.1'
   gem 'listen', '3.0.8'
+  gem 'ruby_dep', '1.3.1'
 end
