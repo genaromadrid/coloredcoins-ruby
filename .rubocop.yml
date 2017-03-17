@@ -9,3 +9,7 @@ Style/Documentation:
 
 Style/HashSyntax:
   EnforcedStyle: ruby19
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
