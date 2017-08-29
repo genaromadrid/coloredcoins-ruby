@@ -11,8 +11,13 @@ module Coloredcoins
     end
 
     def url
-      return "http://testnet.api.coloredcoins.org:80/#{api_version}" if testnet?
-      "http://api.coloredcoins.org:80/#{api_version}"
+      @url ||= "http://testnet.api.coloredcoins.org:80/#{api_version}" if testnet?
+      @url ||= "http://api.coloredcoins.org:80/#{api_version}"
+    end
+
+    def url=(other)
+      @url = other
+      @connection = Connection.new(other)
     end
 
     def testnet?
