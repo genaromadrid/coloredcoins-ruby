@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Coloredcoins::API do
   describe 'changing network' do
     Coloredcoins::NETS.each do |network|
@@ -93,14 +95,14 @@ describe Coloredcoins::API do
         allow(@api).to receive(:send).and_return true
       end
 
-      %w(
+      %w[
         issue_asset
         send_asset
         broadcast
         address_info
         asset_holders
         asset_metadata
-      ).each do |method|
+      ].each do |method|
         it do
           Coloredcoins.send(method)
           expect(@api).to have_received(:send)

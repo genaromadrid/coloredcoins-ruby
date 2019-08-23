@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rest-client'
 
 module Coloredcoins
@@ -36,8 +38,7 @@ module Coloredcoins
   private
 
     def endpoint_uri(path = '')
-      path[0] = '' if path[0] == '/'
-      "#{@url}/#{path}"
+      "#{@url}/#{path.gsub(%r{^\/}, '')}"
     end
   end
 end

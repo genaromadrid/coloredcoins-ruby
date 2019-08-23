@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Coloredcoins
   class MultisigTx < Transaction
     attr_accessor :m,
-                  :pub_keys,
-                  :multisig
+                  :pub_keys
+    attr_writer :multisig
 
     def self.build(tx_hex)
       transaction = MultisigTx.new(tx_hex)
@@ -33,6 +35,7 @@ module Coloredcoins
     def check
       raise ArgumentError, 'Set "m" before signing' unless multisig.m
       return true if multisig.pub_keys || multisig.redeem_script
+
       raise ArgumentError, 'Set "pub_keys" or "redeem_script" before signing'
     end
   end

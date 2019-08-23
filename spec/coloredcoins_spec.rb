@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Coloredcoins do
   describe '#issue_asset' do
     it 'should call the API' do
