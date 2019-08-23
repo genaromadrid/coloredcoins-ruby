@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 notification :terminal_notifier
 
 rspec_options = {

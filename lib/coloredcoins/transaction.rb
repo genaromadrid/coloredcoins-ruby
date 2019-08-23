@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 module Coloredcoins
   class Transaction
     attr_reader :tx
 
     def self.build_key(key)
       return key if key.is_a?(Array)
+
       key = Bitcoin::Key.from_base58(key) unless key.is_a?(Bitcoin::Key)
       key
     rescue RuntimeError => e
@@ -36,6 +39,7 @@ module Coloredcoins
     def broadcast
       response = Coloredcoins.broadcast(to_hex)
       return response unless response[:txid]
+
       txid = response[:txid]
       txid.is_a?(Array) ? txid.first[:txid] : txid
     end

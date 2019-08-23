@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bitcoin'
 require 'coloredcoins/version'
 
@@ -10,14 +12,14 @@ module Coloredcoins
 
   attr_writer :api
 
-  InvalidSignatureError = Class.new SecurityError
+  InvalidSignatureError = Class.new RuntimeError
   ConnectionError = Class.new StandardError
   InvalidKeyError = Class.new RuntimeError
 
-  API_VERSION = 'v3'.freeze
+  API_VERSION = 'v3'
   NETS = [
-    MAINNET = 'mainnet'.freeze,
-    TESTNET = 'testnet'.freeze
+    MAINNET = 'mainnet',
+    TESTNET = 'testnet'
   ].freeze
 
   def self.api
@@ -35,6 +37,7 @@ module Coloredcoins
 
   def self.method_missing(sym, *args, &block)
     return api.send(sym, *args, &block) if api.respond_to?(sym)
+
     super
   end
 
