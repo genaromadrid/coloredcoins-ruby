@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Coloredcoins
   class API
     attr_reader :network,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Coloredcoins::Connection do
   let!(:base_url) { 'http://example.com/api/v1' }
   let!(:path)     { '/some/path' }

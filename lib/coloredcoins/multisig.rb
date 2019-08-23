@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
+# rubocop:disable Naming/UncommunicativeMethodParamName
 module Coloredcoins
   class Multisig
     attr_reader :m, :pub_keys
-    attr_accessor :redeem_script
+    attr_writer :redeem_script
 
     def initialize(m = nil, pub_keys = nil)
       @m = m
@@ -47,3 +50,4 @@ module Coloredcoins
     end
   end
 end
+# rubocop:enable Naming/UncommunicativeMethodParamName

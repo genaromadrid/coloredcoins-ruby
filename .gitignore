@@ -21,3 +21,5 @@ tmp
 *.a
 mkmf.log
 *.sublime-workspace
+.ruby-version
+.ruby-gemset
